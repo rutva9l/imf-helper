@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT;
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('um helloo..?');
+  res.send('ping');
 });
 
 db.authenticate()
@@ -27,5 +27,5 @@ app.use('/gadgets', gadgetsRouter);
 app.use('/auth', authRouter);
 
 app.listen(PORT, () => {
-  console.log(`when the server run ${PORT}`);
+  console.log(`Server running on ${PORT}`);
 });

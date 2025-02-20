@@ -10,11 +10,22 @@ const config: Config = {
 }
 
 export const getGadgets = async (req: Request, res: Response) => {
+    const query = `SELECT *, CONCAT("name", ' - ', FLOOR(RANDOM()*100), '% success probability') AS missionSuccess FROM "Gadgets"`;
     try {
-        const gadgets = await db.query(`SELECT *, CONCAT("name", ' - ', FLOOR(RANDOM()*100), '% success probability') AS missionSuccess FROM "Gadgets"`, {
-            model: Gadgets,
-            mapToModel: true,
-        });
+        const status = req.query.status;
+        let gadgets = [];
+        if (status) {
+            gadgets = await db.query(`${query} WHERE status = :status`, {
+                model: Gadgets,
+                mapToModel: true,
+                replacements: { status }
+            });
+        } else {
+            gadgets = await db.query(`${query}`, {
+                model: Gadgets,
+                mapToModel: true,
+            });
+        }
         res.json({ data: gadgets });
     } catch (error) {
         res.send(error);
@@ -39,7 +50,7 @@ export const updateGadget = async (req: Request, res: Response) => {
                 id: req.params.id
             }
         });
-        res.json({ message: `gadget ${req.params.id} has been updated` });
+        res.json({ message: `Gadget ${req.params.id} has been updated` });
     } catch (error) {
         res.send(error);
     }
@@ -55,7 +66,7 @@ export const deleteGadget = async (req: Request, res: Response) => {
                 id: req.params.id
             }
         });
-        res.json({ message: `gadget ${req.params.id} has been decommissioned` });
+        res.json({ message: `Gadget ${req.params.id} has been decommissioned` });
     } catch (error) {
         res.send(error);
     }
@@ -63,5 +74,6 @@ export const deleteGadget = async (req: Request, res: Response) => {
 
 export const selfDestructGadget = async (req: Request, res: Response) => {
     const id = req.params.id
-    res.send(`me when i self destruct, gadget ${id}`);
+    const code = Math.floor(Math.random() * 1000000);
+    res.json({ message: `Triggered self destruct for gadget ${id}. Use confirmation code ${code} to proceed.`});
 };

@@ -5,7 +5,7 @@ const secret: Secret = process.env.JWT_SECRET || "secret";
 
 export const generateToken = (data: String) => {
     let client = data || "guest"
-    return jwt.sign({client}, secret, { expiresIn: '1h' });
+    return jwt.sign({ client }, secret, { expiresIn: '1h' });
 }
 
 export const authenticateToken = (req: any, res: any, next: any) => {
