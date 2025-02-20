@@ -1,7 +1,9 @@
 import 'dotenv/config'
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import { default as gadgetsRouter } from './routes/gadgets.routes';
+import { default as authRouter } from './routes/auth.routes'
 import db from './config/database'
 
 const app = express();
@@ -20,7 +22,9 @@ db.authenticate()
 
 app.use(express.json());
 app.use(cors());
+app.use(helmet());
 app.use('/gadgets', gadgetsRouter);
+app.use('/auth', authRouter);
 
 app.listen(PORT, () => {
   console.log(`when the server run ${PORT}`);

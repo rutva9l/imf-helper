@@ -7,15 +7,15 @@ const config: Config = {
     dictionaries: [adjectives, nouns],
     separator: ' ',
     style: 'capital',
-  }
+}
 
 export const getGadgets = async (req: Request, res: Response) => {
     try {
         const gadgets = await db.query(`SELECT *, CONCAT("name", ' - ', FLOOR(RANDOM()*100), '% success probability') AS missionSuccess FROM "Gadgets"`, {
             model: Gadgets,
             mapToModel: true,
-          });
-        res.send(gadgets);
+        });
+        res.json({ data: gadgets });
     } catch (error) {
         res.send(error);
     }
@@ -26,7 +26,7 @@ export const createGadget = async (req: Request, res: Response) => {
         // const { name } = req.body;
         const name = uniqueUsernameGenerator(config);
         const newGadget = await Gadgets.create({ name: `The ${name}` });
-        res.send(newGadget);
+        res.json({ data: newGadget });
     } catch (error) {
         res.send(error);
     }
@@ -39,7 +39,7 @@ export const updateGadget = async (req: Request, res: Response) => {
                 id: req.params.id
             }
         });
-        res.send(`gadget ${req.params.id} has been updated`);
+        res.json({ message: `gadget ${req.params.id} has been updated` });
     } catch (error) {
         res.send(error);
     }
@@ -55,7 +55,7 @@ export const deleteGadget = async (req: Request, res: Response) => {
                 id: req.params.id
             }
         });
-        res.send(`gadget ${req.params.id} has been decommissioned`);
+        res.json({ message: `gadget ${req.params.id} has been decommissioned` });
     } catch (error) {
         res.send(error);
     }
